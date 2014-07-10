@@ -1,0 +1,31 @@
+{
+  "name": "xbalancer",
+  "version": "0.1.0",
+  "description": "Smart loadbalancer for Websocket and http servers",
+  "main": "lib/balancer.js",
+  "scripts": {
+    "test": "mocha --recursive spec/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobinQu/xbalancer.git"
+  },
+  "keywords": [
+    "loadbalancer",
+    "balancer",
+    "http",
+    "websocket",
+    "https"
+  ],
+  "author": "RobinQu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RobinQu/xbalancer/issues"
+  },
+  "homepage": "https://github.com/RobinQu/xbalancer",
+  "dependencies": {
+    "http-proxy": "^1.1.5",
+    "lodash": "^2.4.1",
+    "debug": "^1.0.3"
+  }
+}
