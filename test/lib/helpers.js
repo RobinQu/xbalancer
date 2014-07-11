@@ -2,16 +2,17 @@ var http = require("http"),
     https = require("https"),
     fs = require("fs"),
     path = require("path"),
-    request = require("superagent"),
+    request = require("request"),
     debug = require("debug")("helpers"),
     ws = require("ws");
 
 exports.createHttpServer = function(secured) {
   var callback = function(req, res) {
-    res.end(secured ? "https" : "http");
+    res.write(secured ? "https" : "http");
+    res.end();
   };
   if(secured) {
-    return http.createServer({
+    return https.createServer({
       key: fs.readFileSync(path.join(__dirname, "./key.pem")),
       cert: fs.readFileSync(path.join(__dirname, "./cert.pem"))
     }, callback);
@@ -40,7 +41,8 @@ exports.listen = function(servers, startPort, callback) {
   var listen = function(cb) {
     var s = servers[i];
     setTimeout(function() {
-      s.listen(port, cb);
+      debug("server %s on port %s", i, port);
+      (s._server || s).listen(port, cb);
     }, 100);
   };
   var next = function(e) {
@@ -87,14 +89,21 @@ exports.close = function(servers, callback) {
       return;
     }
     i++;
-    close(next);
+    if(i === servers.length) {
+      if(callback) {
+        callback();
+      }
+    } else {
+      close(next);
+    }
   };
   close(next);
   
 };
 
-exports.attack = function(url, num) {
+exports.attack = function(url, num, cb) {
+  var noop = function() {};
   while(num--) {
-    request.get(url).end();
+    request(url, cb || noop);
   }
 };
