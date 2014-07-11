@@ -2,6 +2,7 @@ var http = require("http"),
     https = require("https"),
     fs = require("fs"),
     path = require("path"),
+    request = require("superagent"),
     debug = require("debug")("helpers"),
     ws = require("ws");
 
@@ -90,4 +91,10 @@ exports.close = function(servers, callback) {
   };
   close(next);
   
+};
+
+exports.attack = function(url, num) {
+  while(num--) {
+    request.get(url).end();
+  }
 };

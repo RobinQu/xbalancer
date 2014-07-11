@@ -1,12 +1,10 @@
 var Balancer = require(".."),
     domain = require("domain"),
-    request = require("superagent"),
     expect = require("chai").expect,
     helpers = require("./lib/helpers");
 
 
 describe("RoundRobin Policy", function() {
-  
   
   it("should balance equally to each http worker", function(done) {
     var servers = helpers.createServerGroup("http", 2, false),
@@ -29,10 +27,7 @@ describe("RoundRobin Policy", function() {
         servers[i].on("request", counter.bind(null, i));
       }
       balancer.start(d.intercept(function() {
-        i = 6;
-        while(i--) {
-          request.get("http://localhost:8888").end();
-        }
+        helpers.attach("http://localhost:8888", 6);
         setTimeout(function() {
           servers.forEach(function(s) {
             expect(s.count).to.equal(3);
@@ -48,6 +43,12 @@ describe("RoundRobin Policy", function() {
       helpers.close(servers);
       done(e);
     });
+  });
+  
+  it("should support ws server", function() {
+    
+    
+    
   });
   
 });
